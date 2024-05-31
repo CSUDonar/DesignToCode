@@ -89,6 +89,8 @@ class APIGenAction(Action):
             - 请求参数规则
             所有的request_class中应该包含rootKdtId属性，代表总部ID，Long类型;
             
+            你需要为每个方法生成注释，类中的字段也需要生成注释
+            
             请按下面格式返回        
             「api-info-start」开头
             json数组，数组中的元素包含 desc(接口方法的描述),method_code(接口方法定义的代码),
@@ -125,6 +127,9 @@ class APIGenAction(Action):
             enums = eval(json_str)
         tabs = expander.tabs([enum["desc"] for enum in enums])
         for i, tab in enumerate(tabs):
-            tab.code(enums[i]["method_code"])
-            tab.code(enums[i]["request_class_code"].replace("'", "").replace("\\n", "\n"))
-            tab.code(enums[i]["response_class_code"].replace("'", "").replace("\\n", "\n"))
+            if enums[i]["request_class_code"]:
+                tab.code(enums[i]["method_code"])
+            if enums[i]["request_class_code"]:
+                tab.code(enums[i]["request_class_code"].replace("'", "").replace("\\n", "\n"))
+            if enums[i]["response_class_code"]:
+                tab.code(enums[i]["response_class_code"].replace("'", "").replace("\\n", "\n"))

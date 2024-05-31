@@ -80,9 +80,9 @@ def send_quick_prompt(_action: Action, _thread, _assistant):
 
 
 if __name__ == '__main__':
-    st.title('技术方案生成代码')
+    st.title('Design To Code')
     action = NsqAction()
-    uploaded_file = st.file_uploader("Choose a file")
+    uploaded_file = st.file_uploader("上传技术方案文档，飞书中导出pdf")
     if uploaded_file is not None:
         assistant = get_assistant(uploaded_file)
         get_thread(assistant.id)
@@ -100,8 +100,9 @@ if __name__ == '__main__':
                     fit_action = True
                 if action.get_action_name() == message["content"]:
                     expander = st.expander(action.get_action_name(), expanded=False)
-                    for prompt in action.get_prompt():
-                        expander.write(prompt)
+                    for i, prompt in enumerate(action.get_prompt()):
+                        expander.markdown(f"**提示词 {i + 1}**")
+                        expander.text(prompt)
                     fit_action = True
             if not fit_action:
                 st.markdown(message["content"])
