@@ -64,8 +64,8 @@ def get_thread(assistant_id):
 def send_quick_prompt(_action: Action, _thread, _assistant):
     st.session_state.messages.append({"role": "user", "content": _action.get_action_name()})
     prompts = _action.get_prompt()
-    for prompt in prompts:
-        client.beta.threads.messages.create(thread_id=_thread.id, role="user", content=prompt)
+    for p in prompts:
+        client.beta.threads.messages.create(thread_id=_thread.id, role="user", content=p)
         _run = client.beta.threads.runs.create_and_poll(
             thread_id=_thread.id, assistant_id=_assistant.id
         )
@@ -97,6 +97,11 @@ if __name__ == '__main__':
                 if action.support(message["content"]):
                     expander = st.expander("详情", expanded=True)
                     action.actions(message["content"], index, expander)
+                    fit_action = True
+                if action.get_action_name() == message["content"]:
+                    expander = st.expander(action.get_action_name(), expanded=False)
+                    for prompt in action.get_prompt():
+                        expander.write(prompt)
                     fit_action = True
             if not fit_action:
                 st.markdown(message["content"])

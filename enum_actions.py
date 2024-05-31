@@ -12,7 +12,8 @@ class EnumGenAction(Action):
     def get_prompt(self):
         return ["""找出技术方案中提到的可枚举字段和他的枚举值""",
                 """
-        基于上面的枚举说明 生成对应的java枚举类,枚举类的类名以Enum结尾，枚举类需要包含根据value找到对应枚举的方法如果找不到对应的枚举，返回null即可不用抛异常。
+        基于上面的枚举说明 生成对应的java枚举类,枚举类的类名以Enum结尾，枚举类需要包含根据value找到对应枚举的方法，
+        方法入参应该是封装类型而不是基础类型，比如应该使用Integer而不是int,如果找不到对应的枚举,返回null即可,不用抛异常。
         请按下面格式返回
         「enum-info-start」开头
         json数组，数组中的元素包含 desc(枚举的描述),code(枚举代码)

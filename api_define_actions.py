@@ -4,7 +4,6 @@ import streamlit as st
 from ai_actions import Action
 
 
-
 class APIGenAction(Action):
 
     def get_action_name(self):
@@ -44,7 +43,6 @@ class APIGenAction(Action):
          */
         private String endTime;
     }""")
-    print(demo_request_class)
 
     def get_prompt(self):
         return [
@@ -53,6 +51,44 @@ class APIGenAction(Action):
             """,
             """
             将上面这些接口根据其接口描述生成java接口方法
+            接口方法定义的代码方法的返回类型遵循下面规则
+            - 返回参数规则
+            正常情况下是PlainResult<T> T 代表真正要返回的数据类型
+            如果接口返回的是一个列表则返回的是ListResult<T> T 代表列表中的元素类型
+            如果接口返回的是一个分页数据则返回的是PaginatorResult<T> T 代表分页的列表中的元素类型
+            下面是这几个基础响应类的代码
+            public class PlainResult<T> {
+                private T data;
+                private boolean success;
+                private int code;
+                private String message;
+            }
+            
+            public class ListResult<T> {
+                private List<T> data;
+                private int count;
+                private boolean success;
+                private int code;
+                private String message;
+            }
+            
+            public class PaginatorResult<T> {
+                private ListWithPaginatorVO<T> data;
+                private boolean success;
+                private int code;
+                private String message;
+            }
+            
+            public class ListWithPaginatorVO<T> implements Serializable {
+                private Paginator paginator;
+                private List<T> items;
+            }
+            上面的范型T代表的是response_class
+            如果返回的是基础类型则不用生成response_class
+            
+            - 请求参数规则
+            所有的request_class中应该包含rootKdtId属性，代表总部ID，Long类型;
+            
             请按下面格式返回        
             「api-info-start」开头
             json数组，数组中的元素包含 desc(接口方法的描述),method_code(接口方法定义的代码),
@@ -87,7 +123,6 @@ class APIGenAction(Action):
             enums = json.loads(json_str)
         except Exception as e:
             enums = eval(json_str)
-        print(enums)
         tabs = expander.tabs([enum["desc"] for enum in enums])
         for i, tab in enumerate(tabs):
             tab.code(enums[i]["method_code"])
