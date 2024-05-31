@@ -6,6 +6,8 @@ from nsq_actions import NsqAction
 from enum_actions import EnumGenAction
 from ai_actions import Action
 from api_define_actions import APIGenAction
+import streamlit.components.v1 as components
+from js_component import js_code
 
 client = OpenAI()
 
@@ -130,6 +132,8 @@ if __name__ == '__main__':
                 st.session_state.messages.append({"role": "sys", "content": message_content.value})
                 with st.chat_message("sys"):
                     st.markdown(message_content.value)
-            input_area = st.container()
-            for action in actions:
-                st.button(action.get_action_name(), on_click=send_quick_prompt, args=(action, thread, assistant))
+            with st.container():
+                for action in actions:
+                    st.button(action.get_action_name(), on_click=send_quick_prompt,
+                                       args=(action, thread, assistant))
+    components.html(js_code)
