@@ -76,6 +76,7 @@ def send_quick_prompt(_action: Action, _thread, _assistant):
     for i, a in enumerate(anno):
         msg_content.value = msg_content.value.replace(a.text, "")
     st.session_state.messages.append({"role": "sys", "content": msg_content.value})
+    st.rerun()
 
 
 if __name__ == '__main__':
