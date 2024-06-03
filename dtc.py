@@ -26,6 +26,8 @@ lark_client = lark.Client.builder().app_id(app_id).app_secret(app_secret).build(
 
 @st.cache_resource(ttl='1h')
 def get_wiki_file(url: str):
+    if "wiki/" not in url:
+        raise Exception("链接路径不正确，必须是知识库文档")
     url = url.split("wiki/")[1]
     # 构造请求对象
     request: InternalTenantAccessTokenRequest = InternalTenantAccessTokenRequest.builder() \
@@ -189,10 +191,14 @@ if __name__ == '__main__':
         st.divider()
         docUrl = st.text_input("请输入技术方案链接", key="docUrl")
         if docUrl:
-            file_path = get_wiki_file(docUrl.strip())
-            if file_path is not None:
-                assistant = get_assistant(file_path)
-                st.session_state.file_name = file_path
+            try:
+                file_path = get_wiki_file(docUrl.strip())
+                if file_path is not None:
+                    assistant = get_assistant(file_path)
+                    st.session_state.file_name = file_path
+            except Exception as e:
+                st.error(f"链接解析失败 {e.args}")
+
     else:
         assistant = st.session_state.assistant
 
