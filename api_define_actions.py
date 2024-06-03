@@ -47,7 +47,7 @@ class APIGenAction(Action):
     def get_prompt(self):
         return [
             """
-               方案中新增的前端接口有哪些，请整理成列表 
+               方案中'接口设计'章节中新增的前端接口有哪些，请整理成列表 
             """,
             """
             将上面这些接口根据其接口描述生成java接口方法
