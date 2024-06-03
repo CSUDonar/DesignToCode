@@ -45,4 +45,4 @@ class EnumGenAction(Action):
             enums = eval(json_str)
         tabs = expander.tabs([enum["desc"] for enum in enums])
         for i, tab in enumerate(tabs):
-            tab.code(enums[i]["code"].replace("\\n", "\n"))
+            tab.code(enums[i]["code"].replace("\\n", "\n").replace("'", ""))
