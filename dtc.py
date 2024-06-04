@@ -125,7 +125,10 @@ def get_assistant(_file_path):
         model="gpt-4o",
         tools=[{"type": "file_search"}]
     )
-    vector_store = client.beta.vector_stores.create(name="技术方案" + str(time.time()))
+    vector_store = client.beta.vector_stores.create(name="技术方案" + str(time.time()), expires_after={
+        "anchor": "last_active_at",
+        "days": 1
+    })
     client.beta.vector_stores.file_batches.upload_and_poll(
         vector_store_id=vector_store.id, files=[open(_file_path, "rb")]
     )
