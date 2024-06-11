@@ -3,6 +3,8 @@ import time
 
 import streamlit as st
 from openai import OpenAI
+
+from guide_nsq_consumer_actions import GuideNsqConsumerGenAction
 from nsq_actions import NsqAction
 from enum_actions import EnumGenAction
 from ai_actions import Action
@@ -15,10 +17,11 @@ from lark_oapi.api.drive.v1 import *
 from lark_oapi.api.auth.v3 import *
 import os
 
+from wecom_nsq_consumer_actions import WecomNsqConsumerGenAction
+
 client = OpenAI()
 
-actions = [NsqAction(), EnumGenAction(), APIGenAction()]
-
+actions = [NsqAction(), EnumGenAction(), APIGenAction(), WecomNsqConsumerGenAction(),GuideNsqConsumerGenAction()]
 app_id = os.getenv("lark_app_id")
 app_secret = os.getenv("lark_app_secret")
 lark_client = lark.Client.builder().app_id(app_id).app_secret(app_secret).build()
